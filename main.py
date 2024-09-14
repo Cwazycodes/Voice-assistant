@@ -8,6 +8,26 @@ import re
 
 load_dotenv()
 
+WAKE_WORD = 'pyra'
+
+def listen_for_wake_word():
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        print(f"Listening for the wake word '{WAKE_WORD}'...")
+        while True:
+            audio = recognizer.listen(source)
+            try:
+                phrase = recognizer.recognize_google(audio).lower()
+                if WAKE_WORD in phrase:
+                    print(f"Wake word '{WAKE_WORD}' detected!")
+                    speak('Yes, how can I help you?')
+                    return True
+            except sr.UnknownValueError:
+                pass
+            except sr.RequestError:
+                print("Sorry, there was an issue with the speech recognition service.")
+                return False
+
 def listen_command():
     recognizer = sr.Recognizer()
     with sr.Microphone() as source:
@@ -60,29 +80,30 @@ def main():
     print("Voice assistant is running. Say 'exit' to stop.")
     
     while True:
-        command = listen_command()
-        if command:
-            if "exit" in command.lower():  
-                print("Exiting...")
-                speak("Goodbye! Feel free to return if you have more questions or need assistance. Have a great day!")
-                break
+        if listen_for_wake_word():
+            command = listen_command()
+            if command:
+                if "exit" in command.lower():  
+                    print("Exiting...")
+                    speak("Goodbye! Feel free to return if you have more questions or need assistance. Have a great day!")
+                    break
 
-            if "weather" in command.lower():
-                city = extract_city_from_command(command)
-                if city:
-                    weather_info = get_weather(city)
-                    print(f"Weather info: {weather_info}")
-                    speak(weather_info)
+                if "weather" in command.lower():
+                    city = extract_city_from_command(command)
+                    if city:
+                        weather_info = get_weather(city)
+                        print(f"Weather info: {weather_info}")
+                        speak(weather_info)
+                    else:
+                        speak("Sorry, I couldn't detect the city. Please specify the city.")
+                    continue
+                
+                response = openai_helper.ask_openai(command)
+                if response:
+                    print(f"AI: {response}")
+                    speak(response)
                 else:
-                    speak("Sorry, I couldn't detect the city. Please specify the city.")
-                continue
-            
-            response = openai_helper.ask_openai(command)
-            if response:
-                print(f"AI: {response}")
-                speak(response)
-            else:
-                speak("Sorry, I couldn't process that.")
+                    speak("Sorry, I couldn't process that.")
 
 if __name__ == "__main__":
     main()
