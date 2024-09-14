@@ -2,7 +2,7 @@ from openai_helper import OpenAIHelper
 from unittest.mock import patch, MagicMock
 from gtts import gTTS
 import speech_recognition as sr
-from main import speak, listen_command
+from main import speak, listen_command, get_weather
 
 def test_openai_response():
     openai_helper = OpenAIHelper()
@@ -34,3 +34,13 @@ def test_speak():
 def test_listen_command(mock_recognize):
     command = listen_command()
     assert command == "Test command"
+
+@patch('requests.get')
+def test_get_weather(mock_get):
+    mock_get.return_value.json.return_value = {
+        "cod": 200,
+        "main": {"temp": 20},
+        "weather": [{"description": "clear sky"}]
+    }
+    result = get_weather("London")
+    assert "20°C with clear sky" in result
