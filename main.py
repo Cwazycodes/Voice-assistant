@@ -5,6 +5,7 @@ from gtts import gTTS
 import speech_recognition as sr
 import requests
 import re
+from datetime import datetime
 
 load_dotenv()
 
@@ -30,6 +31,7 @@ def speak(text):
     tts = gTTS(text=text, lang='en')
     tts.save('output.mp3')
     os.system('afplay output.mp3')  
+    os.remove('output.mp3')
 
 def get_weather(city):
     api_key = os.getenv('OPENWEATHERMAP_API_KEY')
@@ -50,6 +52,10 @@ def extract_city_from_command(command):
         city = match.group(1) or match.group(2)
         return city.strip()
     return None
+
+def get_current_time():
+    now = datetime.now()
+    return now.strftime("The current time is %H:%M.")
 
 def main():
     api_key = os.getenv('OPENAI_API_KEY')
@@ -91,6 +97,12 @@ def main():
                     else:
                         speak("Sorry, I couldn't detect the city. Please specify the city.")
                     continue
+
+                if "time" in command.lower():
+                    time_info = get_current_time()
+                    print (f"Time info: {time_info}")
+                    speak(time_info)
+                    continue 
                 
                 response = openai_helper.ask_openai(command)
                 if response:
