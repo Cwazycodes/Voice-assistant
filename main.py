@@ -13,7 +13,7 @@ WAKE_WORD = 'piper'
 def listen_for_command():
     recognizer = sr.Recognizer()
     with sr.Microphone() as source:
-        print("Say 'Piper' before your command to wake assistant...")
+        print("Listening...")
         audio = recognizer.listen(source)
         try:
             phrase = recognizer.recognize_google(audio).lower()
@@ -44,7 +44,7 @@ def get_weather(city):
         return "Sorry, I couldn't fetch the weather data."
 
 def extract_city_from_command(command):
-    pattern = re.compile(r'weather in ([a-zA-Z\s-]+)|in ([a-zA-Z\s-]+)', re.IGNORECASE)
+    pattern = re.compile(r'weather in ([\w\s-]+)|in ([\w\s-]+)', re.IGNORECASE)
     match = pattern.search(command)
     if match:
         city = match.group(1) or match.group(2)
@@ -59,7 +59,7 @@ def main():
     
     openai_helper = OpenAIHelper()
 
-    print("Voice assistant is running. Say 'exit' at any time to stop.")
+    print("Voice assistant is running. Say 'exit' at any time to stop. Say 'Piper' to wake assistant.")
     
     while True:
         phrase = listen_for_command()
