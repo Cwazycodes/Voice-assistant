@@ -8,35 +8,17 @@ import re
 
 load_dotenv()
 
-WAKE_WORD = 'pyra'
+WAKE_WORD = 'piper'
 
-def listen_for_wake_word():
+def listen_for_command():
     recognizer = sr.Recognizer()
     with sr.Microphone() as source:
-        print(f"Listening for the wake word '{WAKE_WORD}'...")
-        while True:
-            audio = recognizer.listen(source)
-            try:
-                phrase = recognizer.recognize_google(audio).lower()
-                if WAKE_WORD in phrase:
-                    print(f"Wake word '{WAKE_WORD}' detected!")
-                    speak('Yes, how can I help you?')
-                    return True
-            except sr.UnknownValueError:
-                pass
-            except sr.RequestError:
-                print("Sorry, there was an issue with the speech recognition service.")
-                return False
-
-def listen_command():
-    recognizer = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening...")
+        print("Say 'Piper' before your command to wake assistant...")
         audio = recognizer.listen(source)
         try:
-            command = recognizer.recognize_google(audio)
-            print(f"You said: {command}")
-            return command
+            phrase = recognizer.recognize_google(audio).lower()
+            print(f"You said: {phrase}")
+            return phrase
         except sr.UnknownValueError:
             print("Sorry, I did not understand that.")
             return ""
@@ -47,7 +29,7 @@ def listen_command():
 def speak(text):
     tts = gTTS(text=text, lang='en')
     tts.save('output.mp3')
-    os.system('afplay output.mp3') 
+    os.system('afplay output.mp3')  
 
 def get_weather(city):
     api_key = os.getenv('OPENWEATHERMAP_API_KEY')
@@ -59,7 +41,7 @@ def get_weather(city):
         description = data["weather"][0]["description"]
         return f"The temperature in {city} is {temperature}°C with {description}."
     else:
-        return "Sorry, I couldn't fetch the weather data. "
+        return "Sorry, I couldn't fetch the weather data."
 
 def extract_city_from_command(command):
     pattern = re.compile(r'weather in ([a-zA-Z\s-]+)|in ([a-zA-Z\s-]+)', re.IGNORECASE)
@@ -76,14 +58,26 @@ def main():
         raise ValueError("OpenAI API key not found. Set the 'OPENAI_API_KEY' environment variable.")
     
     openai_helper = OpenAIHelper()
-    
-    print("Voice assistant is running. Say 'exit' to stop.")
+
+    print("Voice assistant is running. Say 'exit' at any time to stop.")
     
     while True:
-        if listen_for_wake_word():
-            command = listen_command()
+        phrase = listen_for_command()
+        
+        if not phrase:
+            continue
+
+        if "exit" in phrase:
+            print("Exiting...")
+            speak("Goodbye! Feel free to return if you have more questions or need assistance. Have a great day!")
+            break
+
+        if WAKE_WORD in phrase:
+            speak('Yes, how can I help you?')
+            
+            command = listen_for_command()
             if command:
-                if "exit" in command.lower():  
+                if "exit" in command.lower():
                     print("Exiting...")
                     speak("Goodbye! Feel free to return if you have more questions or need assistance. Have a great day!")
                     break
@@ -107,4 +101,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
