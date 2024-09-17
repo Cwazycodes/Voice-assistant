@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import os
 from dotenv import load_dotenv
 from openai_helper import OpenAIHelper
@@ -20,7 +20,7 @@ recognizer = sr.Recognizer()
 
 @app.route('/')
 def index():
-    return jsonify({"message": "Voice assistant is running. Say 'Piper' to wake it."})
+    return render_template('index.html')
 
 @app.route('/listen', methods=['GET'])
 def listen_for_command():
