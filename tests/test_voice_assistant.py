@@ -3,6 +3,7 @@ from unittest.mock import patch, MagicMock
 from gtts import gTTS
 import speech_recognition as sr
 from main import speak, listen_for_command, get_weather, main
+import os
 
 def test_openai_response():
     openai_helper = OpenAIHelper()
@@ -18,14 +19,21 @@ def test_openai_response():
         assert response == "Test response from OpenAI"
 
 def test_speak():
-    with patch('main.gTTS') as mock_gtts:
+    with patch('main.gTTS') as mock_gtts, \
+         patch('os.system') as mock_system, \
+         patch('os.remove') as mock_remove:  
+        
         mock_gtts_instance = mock_gtts.return_value
         mock_gtts_instance.save = MagicMock()
 
         speak("Hello World")
-
+        
         mock_gtts_instance.save.assert_called_once_with('output.mp3')
-        mock_gtts.assert_called_once_with(text="Hello World", lang='en')
+        
+        mock_system.assert_called_once_with('afplay output.mp3')
+        
+        mock_remove.assert_called_once_with('output.mp3')
+
 
 @patch('speech_recognition.Recognizer.recognize_google', return_value="Test command")
 def test_listen_for_command(mock_recognize):
