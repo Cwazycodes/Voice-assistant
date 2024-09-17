@@ -9,7 +9,7 @@ function setupRecognition() {
   }
 
   if (recognition) {
-    recognition.abort();
+    recognition.abort(); 
   }
 
   recognition = new webkitSpeechRecognition();
@@ -43,38 +43,17 @@ function setupRecognition() {
     if (finalTranscript && listeningForWakeWord) {
       if (finalTranscript.includes("piper")) {
         listeningForWakeWord = false;
-        document.getElementById("status").innerText =
-          "Wake word detected. Now listening for command...";
-        recognition.stop();
-        setupRecognition();
+        handleWakeWordDetection();
+        recognition.stop(); 
+        setupRecognition(); 
       }
     } else if (finalTranscript && !listeningForWakeWord) {
-      document.getElementById(
-        "status"
-      ).innerText = `Processing command: ${finalTranscript}`;
-      recognition.stop();
-
-      if (finalTranscript.includes("exit")) {
-        document.getElementById("response").innerText = "Exiting...";
-        listeningForWakeWord = true;
-        return;
-      } else if (finalTranscript.includes("weather")) {
-        fetchWeather(finalTranscript);
-      } else if (finalTranscript.includes("time")) {
-        fetchTime();
-      } else {
-        askOpenAI(finalTranscript);
-      }
-
-      listeningForWakeWord = true;
-      setupRecognition();
+      handleUserCommand(finalTranscript);
     }
   };
 
   recognition.onerror = function (event) {
-    document.getElementById(
-      "status"
-    ).innerText = `Error occurred: ${event.error}`;
+    document.getElementById("status").innerText = `Error: ${event.error}`;
   };
 
   recognition.onend = function () {
@@ -84,6 +63,36 @@ function setupRecognition() {
   };
 
   recognition.start();
+}
+
+function handleWakeWordDetection() {
+  const responses = ["How can I help you?", "Yes?"];
+  const response = responses[Math.floor(Math.random() * responses.length)];
+
+  document.getElementById("status").innerText =
+    "Wake word detected. Now listening for command...";
+  speakText(response);
+  document.getElementById("response").innerText = response;
+}
+
+function handleUserCommand(command) {
+  document.getElementById("status").innerText = `Processing command: ${command}`;
+  recognition.stop(); 
+
+  if (command.includes("exit")) {
+    document.getElementById("response").innerText = "Exiting...";
+    speakText("Exiting...");
+    listeningForWakeWord = true;
+  } else if (command.includes("weather")) {
+    fetchWeather(command);
+  } else if (command.includes("time")) {
+    fetchTime();
+  } else {
+    askOpenAI(command);
+  }
+
+  listeningForWakeWord = true; 
+  setupRecognition(); 
 }
 
 function speakText(text) {
