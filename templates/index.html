@@ -1,47 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Voice Assistant</title>
-    <link rel="icon" href="data:,">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        #status, #transcription, #response { margin-bottom: 20px; }
-        #status { font-weight: bold; }
-        #response { color: green; }
-        .error { color: red; }
-        .instructions { margin-top: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
-    </style>
-</head>
-<body>
-    <h1>Voice Assistant</h1>
-    <div id="status">Listening for the wake word...</div>
-    <div>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Voice Assistant</h1>
+      <div id="status">Listening for the wake word...</div>
+      <div>
         <p><strong>You said:</strong></p>
         <p id="transcription">Waiting for speech...</p>
-    </div>
-    <div>
+      </div>
+      <div>
         <p><strong>Response:</strong></p>
         <p id="response">...</p>
-    </div>
-    
-    <div class="instructions">
+      </div>
+
+      <div class="instructions">
         <h2>How to Use Piper</h2>
         <ul>
-            <li>Say "Piper" to activate the assistant.</li>
-            <li>After activation, you can ask Piper various questions or give commands.</li>
-            <li>Example commands:
-                <ul>
-                    <li>"What's the weather like in [city]?"</li>
-                    <li>"What time is it?"</li>
-                    <li>"Who is the president of the United States?"</li>
-                </ul>
-            </li>
-            <li>To exit, say "exit". Piper will stop listening and wait for the wake word again.</li>
+          <li>Say "Piper" to activate the assistant.</li>
+          <li>
+            After activation, you can ask Piper various questions or give
+            commands.
+          </li>
+          <li>
+            Example commands:
+            <ul>
+              <li>"What's the weather like in [city]?"</li>
+              <li>"What time is it?"</li>
+              <li>"Who is the president of the United States?"</li>
+            </ul>
+          </li>
+          <li>
+            To exit, say "exit". Piper will stop listening and wait for the wake
+            word again.
+          </li>
         </ul>
+      </div>
     </div>
 
+    <footer>
+      <p>
+        Designed by
+        <a href="https://muhammadhussaindev.netlify.app" target="_blank"
+          >Muhammad Hussain</a
+        >
+      </p>
+    </footer>
     <script src="/static/app.js"></script>
-</body>
+  </body>
 </html>
