@@ -1,9 +1,10 @@
 # Use the official Python image from the Docker Hub
-FROM python:3.9-slim
+FROM python:3.11-slim
 
-# Install PortAudio development files
+# Install system dependencies and PortAudio development files
 RUN apt-get update && \
     apt-get install -y \
+    build-essential \
     portaudio19-dev \
     && rm -rf /var/lib/apt/lists/*
 
