@@ -1,12 +1,13 @@
 # Use a Python base image
 FROM python:3.11-slim
 
-# Install system dependencies
+# Install system dependencies, including PortAudio
 RUN apt-get update && apt-get install -y \
     portaudio19-dev \
     libasound2-dev \
     libav-tools \
     build-essential \
+    gcc \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
