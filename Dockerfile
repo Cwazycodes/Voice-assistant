@@ -16,11 +16,10 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy the rest of the code
+# Copy the rest of the application code
 COPY . .
 
 # Specify the command to run the application
-CMD ["python", "app.py"]  # Replace with your main entry point if different
+CMD ["python", "app.py"]  # Replace with your actual entry point if different
