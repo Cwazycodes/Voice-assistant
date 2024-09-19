@@ -1,2 +1,7 @@
-build:
-  - ./render-build.sh
+# .render.yaml
+services:
+  - type: web
+    name: Voice-assistant-1
+    env: python
+    buildCommand: ./render-build.sh
+    startCommand: python app.py
