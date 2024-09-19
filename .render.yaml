@@ -1,6 +1,2 @@
-services:
-  - type: web
-    name: my-service
-    env: python
-    buildCommand: ./build.sh
-    startCommand: python app.py
+build:
+  - ./render-build.sh
