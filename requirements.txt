@@ -26,7 +26,6 @@ multidict==6.1.0
 openai==0.28.0
 packaging==24.1
 pluggy==1.5.0
-PyAudio==0.2.14
 pydantic==2.9.1
 pydantic_core==2.23.3
 # macOS-specific pyobjc dependencies

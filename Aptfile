@@ -1,3 +1,0 @@
-git add Aptfile runtime.txt
-git commit -m "Update Aptfile and runtime"
-git push heroku main
