@@ -3,5 +3,5 @@ services:
   - type: web
     name: Voice-assistant-1
     env: python
-    buildCommand: ./render-build.sh
+    buildCommand: render-build.sh
     startCommand: python app.py
